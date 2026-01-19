@@ -148,6 +148,46 @@
 ### Export
 - `GET /api/export/markdown` - Exporter le CV en Markdown
 
+## 🧪 Tests
+
+### Tests Unitaires Disponibles
+
+#### Test 1 : Ajout de Compétence Existante
+**Objectif** : Vérifier que l'ajout d'une compétence existante (SAP) à une expérience (tefdf) réutilise correctement la compétence sans créer de doublon.
+
+**Exécution** :
+```bash
+cd /home/user/webapp
+./test_add_sap_skill.sh
+```
+
+**Ce qui est testé** :
+- ✅ La compétence existante est réutilisée (pas de création de doublon)
+- ✅ L'ID de la compétence est préservé
+- ✅ L'association est correctement enregistrée dans la base
+- ✅ Aucune duplication n'est créée dans la table `skills`
+
+**Résultats attendus** :
+```
+✅ La compétence SAP existante (ID: 1) a été ajoutée
+✅ Aucune duplication n'a été créée
+✅ L'ID de la compétence est correct
+✅ L'association est enregistrée dans la base
+```
+
+Voir `TEST_RESULTS.md` pour les détails complets du test.
+
+### Tests Manuels
+
+#### Test Interface Web
+1. Accédez à l'application : https://3000-ieorxtkymg9b9ldepsjp5-6532622b.e2b.dev
+2. Cliquez sur "Modifier" pour une expérience existante
+3. Ajoutez une compétence existante (ex: Python, SAP, SQL)
+4. Enregistrez
+5. Vérifiez que la compétence apparaît correctement
+6. Modifiez à nouveau l'expérience
+7. Vérifiez que la compétence conserve son ID d'origine
+
 ## 🛠️ Développement Local
 
 ### Prérequis
