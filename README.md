@@ -234,6 +234,7 @@ Après le déploiement, wrangler affichera l'URL de production :
 ### ✅ Fonctionnalités Implémentées
 - ✅ CRUD complet des expériences
 - ✅ Gestion des compétences par expérience
+- ✅ **BUG FIX v1.0.1**: Correction du mapping des compétences lors de l'édition
 - ✅ Timeline interactive et responsive
 - ✅ Export CV en Markdown
 - ✅ Interface moderne avec animations
@@ -301,5 +302,17 @@ Usage personnel - Charles DE COURCEL
 ---
 
 **Dernière mise à jour** : 2026-01-19  
-**Version** : 1.0.0  
+**Version** : 1.0.1  
 **Statut** : ✅ Prêt pour utilisation locale et déploiement production
+
+## 📝 Changelog
+
+### v1.0.1 (2026-01-19)
+- 🐛 **Bug Fix**: Correction du mapping des compétences lors de l'édition
+  - Ajout d'un champ caché `skill_id[]` pour préserver les IDs des compétences existantes
+  - Modification de la logique de collecte des compétences pour inclure l'ID si disponible
+  - Les compétences existantes sont maintenant correctement réutilisées au lieu d'être dupliquées
+  - Test validé : modification d'expérience avec compétences existantes et nouvelles
+
+### v1.0.0 (2026-01-19)
+- 🎉 Version initiale avec toutes les fonctionnalités principales
