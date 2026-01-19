@@ -1,12 +1,16 @@
-# 🐛 Bug Critique: Mauvais Mapping des Compétences lors de la Création
+# 🐛 Bug Critique: Mauvais Mapping des Compétences (POST et PUT)
 
 ## 📋 Résumé du Bug
 
-**Symptôme** : Lors de la création d'une nouvelle expérience avec une compétence existante (ex: "ChatGPT"), une **autre compétence** est enregistrée à la place (ex: "PowerBI").
+**Symptôme** : Lors de la **création (POST)** ou **modification (PUT)** d'une expérience avec une compétence existante (ex: "ChatGPT"), une **autre compétence** est enregistrée à la place (ex: "PowerBI").
 
 **Gravité** : 🔴 **CRITIQUE** - Corruption de données
 
 **Statut** : ✅ **RÉSOLU** (v1.0.4)
+
+**Routes Affectées** :
+- ✅ `POST /api/experiences` (corrigé)
+- ✅ `PUT /api/experiences/:id` (corrigé)
 
 ---
 
@@ -15,13 +19,15 @@
 ### Comportement Observé
 
 ```
-Utilisateur crée une expérience avec : ChatGPT (ID attendu: 14)
-Résultat dans la DB                  : PowerBI  (ID enregistré: 6)
+Utilisateur crée/modifie une expérience avec : ChatGPT (ID attendu: 14)
+Résultat dans la DB                          : PowerBI  (ID enregistré: 6)
 ```
 
 ### Cause Racine
 
-**Fichier** : `src/index.tsx`, ligne 118-123
+**Fichiers** : `src/index.tsx`
+- Ligne 118-123 (POST)
+- Ligne 184-195 (PUT)
 
 **Code Problématique** :
 ```typescript
@@ -122,7 +128,35 @@ if (existing) {
 ✅ NouvelleTech2026 créée avec nouvel ID
 ```
 
-### Test 3 : Interface Web Manuelle
+### Test 3 : Modification (PUT) avec Compétences Existantes
+
+**Script** : `test_put_skills.sh`
+
+**Cas de test** :
+1. Créer une expérience avec Python
+2. Modifier l'expérience pour remplacer par ChatGPT et Docker
+3. Vérifier que les bons IDs sont utilisés
+
+**Résultat** :
+```
+✅ ChatGPT correctement mappée (ID 14)
+✅ Docker correctement mappée (ID 9)
+✅ Pas de mauvais mapping
+```
+
+**Commandes de test** :
+```bash
+./test_put_skills.sh
+
+# Ou manuellement
+curl -X POST http://localhost:3000/api/experiences -H "Content-Type: application/json" \
+  -d '{"company":"Test","position":"Dev","start_date":"2026-01-01","is_current":true,"skills":[{"name":"Python","category":"Programming"}]}'
+
+curl -X PUT http://localhost:3000/api/experiences/1 -H "Content-Type: application/json" \
+  -d '{"company":"Test Updated","position":"Senior Dev","start_date":"2026-01-01","is_current":true,"skills":[{"name":"ChatGPT","category":"AI/ML"},{"name":"Docker","category":"DevOps"}]}'
+```
+
+### Test 4 : Interface Web Manuelle
 
 **Procédure** :
 1. Créer une nouvelle expérience via l'interface
@@ -140,17 +174,20 @@ if (existing) {
 
 | Action | Compétence Demandée | Compétence Enregistrée | Gravité |
 |--------|---------------------|------------------------|---------|
-| Créer exp | ChatGPT (ID 14) | PowerBI (ID 6) | 🔴 Critique |
-| Créer exp | Docker (ID 9) | Autre compétence | 🔴 Critique |
-| Créer exp | SAP (ID 1) | Autre compétence | 🔴 Critique |
+| POST (Créer) | ChatGPT (ID 14) | PowerBI (ID 6) | 🔴 Critique |
+| POST (Créer) | Docker (ID 9) | Autre compétence | 🔴 Critique |
+| PUT (Modifier) | ChatGPT (ID 14) | PowerBI (ID 6) | 🔴 Critique |
+| PUT (Modifier) | SAP (ID 1) | Autre compétence | 🔴 Critique |
 
 ### Après le Fix
 
 | Action | Compétence Demandée | Compétence Enregistrée | Status |
 |--------|---------------------|------------------------|--------|
-| Créer exp | ChatGPT (ID 14) | ChatGPT (ID 14) | ✅ Correct |
-| Créer exp | Docker (ID 9) | Docker (ID 9) | ✅ Correct |
-| Créer exp | NouvelleTech | NouvelleTech (nouveau ID) | ✅ Correct |
+| POST (Créer) | ChatGPT (ID 14) | ChatGPT (ID 14) | ✅ Correct |
+| POST (Créer) | Docker (ID 9) | Docker (ID 9) | ✅ Correct |
+| POST (Créer) | NouvelleTech | NouvelleTech (nouveau ID) | ✅ Correct |
+| PUT (Modifier) | ChatGPT (ID 14) | ChatGPT (ID 14) | ✅ Correct |
+| PUT (Modifier) | Docker (ID 9) | Docker (ID 9) | ✅ Correct |
 
 ---
 
@@ -158,14 +195,16 @@ if (existing) {
 
 ### Code Source
 
-- **src/index.tsx** (ligne 112-130)
-  - Modification de la logique de mapping des compétences
-  - SELECT avant INSERT
+- **src/index.tsx**
+  - Ligne 112-130 : POST `/api/experiences` - Correction du mapping
+  - Ligne 180-203 : PUT `/api/experiences/:id` - Correction du mapping
+  - Même logique appliquée : SELECT avant INSERT
 
 ### Tests Ajoutés
 
-- **test_create_chatgpt.sh** - Test automatisé pour ChatGPT
-- **test_mixed_skills.sh** - Test avec compétences mixtes
+- **test_create_chatgpt.sh** - Test automatisé POST avec ChatGPT
+- **test_mixed_skills.sh** - Test POST avec compétences mixtes
+- **test_put_skills.sh** - Test automatisé PUT avec ChatGPT et Docker
 
 ---
 
@@ -209,11 +248,18 @@ git push origin main
 ### Tests à Effectuer Régulièrement
 
 ```bash
-# Test complet des compétences
+# Tests POST (création)
 ./test_create_chatgpt.sh
 ./test_mixed_skills.sh
-./test_add_sap_skill.sh  # Test existant
+
+# Tests PUT (modification)
+./test_put_skills.sh
+
+# Test existant (modification avec ID)
+./test_add_sap_skill.sh
 ```
+
+**Important** : Exécutez tous ces tests après chaque modification du code de gestion des compétences.
 
 ---
 
