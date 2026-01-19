@@ -455,6 +455,9 @@ app.get('/api/export/markdown', async (c) => {
 // MAIN ROUTE - Frontend HTML (INLINE)
 // ============================================
 
+// ============================================
+// ROOT ROUTE
+// ============================================
 app.get('/', (c) => {
   const html = `<!DOCTYPE html>
 <html lang="fr">
