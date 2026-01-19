@@ -187,6 +187,7 @@ function addSkillField(skill = null) {
   const skillDiv = document.createElement('div');
   skillDiv.className = 'flex space-x-2 items-center skill-field';
   skillDiv.innerHTML = `
+    <input type="hidden" name="skill_id[]" value="${skill?.id || ''}" />
     <input type="text" name="skill_name[]" value="${skill?.name || ''}" placeholder="Nom de la compétence" class="flex-1 border border-gray-300 rounded px-3 py-2 text-sm" list="skills-datalist" />
     <input type="text" name="skill_category[]" value="${skill?.category || ''}" placeholder="Catégorie" class="flex-1 border border-gray-300 rounded px-3 py-2 text-sm" />
     <button type="button" onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800">
@@ -225,14 +226,22 @@ document.getElementById('experienceForm').addEventListener('submit', async (e) =
   };
 
   // Collect skills
+  const skillIds = document.getElementsByName('skill_id[]');
   const skillNames = document.getElementsByName('skill_name[]');
   const skillCategories = document.getElementsByName('skill_category[]');
   for (let i = 0; i < skillNames.length; i++) {
     if (skillNames[i].value.trim()) {
-      formData.skills.push({
+      const skillData = {
         name: skillNames[i].value.trim(),
         category: skillCategories[i].value.trim() || 'Other'
-      });
+      };
+      
+      // Include skill id if it exists (for existing skills)
+      if (skillIds[i] && skillIds[i].value) {
+        skillData.id = parseInt(skillIds[i].value);
+      }
+      
+      formData.skills.push(skillData);
     }
   }
 
