@@ -1,0 +1,27 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# TypeScript
+*.ts linguist-language=TypeScript
+*.tsx linguist-language=TypeScript
+
+# JavaScript
+*.js linguist-language=JavaScript
+
+# Documentation
+*.md linguist-documentation
+
+# SQL
+*.sql linguist-language=SQL
+
+# Configuration files
+*.json linguist-language=JSON
+*.jsonc linguist-language=JSON
+*.toml linguist-language=TOML
+*.yml linguist-language=YAML
+*.yaml linguist-language=YAML
+
+# Ignore generated files in language statistics
+dist/** linguist-generated=true
+node_modules/** linguist-vendored=true
+package-lock.json linguist-generated=true
