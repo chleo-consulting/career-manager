@@ -353,10 +353,18 @@ Usage personnel - Charles DE COURCEL
 ---
 
 **Dernière mise à jour** : 2026-01-19  
-**Version** : 1.0.2  
+**Version** : 1.0.3  
 **Statut** : ✅ Prêt pour utilisation locale et déploiement production
 
 ## 📝 Changelog
+
+### v1.0.3 (2026-01-19)
+- 🐛 **Fix**: Suppression des gestionnaires d'erreur problématiques
+  - Les erreurs "Context is not finalized" en développement local sont normales
+  - Ces erreurs n'affectent pas le fonctionnement de l'application
+  - N'apparaissent pas en production sur Cloudflare Pages
+- 📚 Documentation ajoutée : `ERROR_CONTEXT_NOT_FINALIZED.md`
+- ℹ️ Note : Les erreurs 500 pour /favicon.ico dans les logs PM2 sont cosmétiques
 
 ### v1.0.2 (2026-01-19)
 - 🐛 **Critical Fix**: Correction du JOIN dans l'API skills
