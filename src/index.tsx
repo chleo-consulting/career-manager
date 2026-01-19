@@ -232,7 +232,7 @@ app.get('/api/skills', async (c) => {
     const { results } = await c.env.DB.prepare(`
       SELECT s.*, COUNT(DISTINCT es.experience_id) as usage_count
       FROM skills s
-      LEFT JOIN experience_skills es ON s.id = es.id
+      LEFT JOIN experience_skills es ON s.id = es.skill_id
       GROUP BY s.id
       ORDER BY s.category, s.name
     `).all()
