@@ -353,10 +353,19 @@ Usage personnel - Charles DE COURCEL
 ---
 
 **Dernière mise à jour** : 2026-01-19  
-**Version** : 1.0.3  
+**Version** : 1.0.4  
 **Statut** : ✅ Prêt pour utilisation locale et déploiement production
 
 ## 📝 Changelog
+
+### v1.0.4 (2026-01-19)
+- 🐛 **Critical Fix**: Correction du mapping des compétences lors de la **création** d'expériences
+  - Bug : Les compétences existantes étaient mal mappées (ex: ChatGPT → PowerBI)
+  - Cause : `INSERT OR IGNORE` retournait `last_row_id` incorrect
+  - Solution : SELECT d'abord pour vérifier l'existence, puis INSERT seulement si nécessaire
+  - Les compétences sont maintenant correctement mappées (ChatGPT ID 14, Docker ID 9, etc.)
+  - Tests automatisés ajoutés : `test_create_chatgpt.sh`, `test_mixed_skills.sh`
+- 📚 Documentation complète : `BUG_FIX_SKILL_MAPPING_v1.0.4.md`
 
 ### v1.0.3 (2026-01-19)
 - 🐛 **Fix**: Suppression des gestionnaires d'erreur problématiques
