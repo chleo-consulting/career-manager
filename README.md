@@ -150,6 +150,17 @@
 
 ## 🧪 Tests
 
+### Guide de Débogage
+
+**En cas d'erreur, consultez le guide complet** : [`DEBUGGING_GUIDE.md`](./DEBUGGING_GUIDE.md)
+
+Le guide couvre :
+- 📋 Comment lire les logs PM2
+- 🔍 Débogage avec la console navigateur
+- 🌐 Inspection des requêtes réseau
+- 💾 Vérification de la base de données
+- 🛠️ Erreurs courantes et leurs solutions
+
 ### Tests Unitaires Disponibles
 
 #### Test 1 : Ajout de Compétence Existante
@@ -342,10 +353,18 @@ Usage personnel - Charles DE COURCEL
 ---
 
 **Dernière mise à jour** : 2026-01-19  
-**Version** : 1.0.1  
+**Version** : 1.0.2  
 **Statut** : ✅ Prêt pour utilisation locale et déploiement production
 
 ## 📝 Changelog
+
+### v1.0.2 (2026-01-19)
+- 🐛 **Critical Fix**: Correction du JOIN dans l'API skills
+  - Erreur : `LEFT JOIN experience_skills es ON s.id = es.id`
+  - Correction : `LEFT JOIN experience_skills es ON s.id = es.skill_id`
+  - Résout l'erreur "FOREIGN KEY constraint failed" lors de la modification d'expériences
+  - Les compétences sont maintenant correctement listées et associées
+- 📚 Ajout du guide de débogage complet (`DEBUGGING_GUIDE.md`)
 
 ### v1.0.1 (2026-01-19)
 - 🐛 **Bug Fix**: Correction du mapping des compétences lors de l'édition
