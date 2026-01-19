@@ -181,17 +181,19 @@ app.put('/api/experiences/:id', async (c) => {
       for (const skill of skills) {
         let skillId = skill.id
         if (!skillId) {
-          const skillResult = await c.env.DB.prepare(`
-            INSERT OR IGNORE INTO skills (name, category) VALUES (?, ?)
-          `).bind(skill.name, skill.category || 'Other').run()
+          // First, check if skill already exists
+          const existing = await c.env.DB.prepare(`
+            SELECT id FROM skills WHERE name = ?
+          `).bind(skill.name).first()
           
-          if (skillResult.meta.last_row_id) {
-            skillId = skillResult.meta.last_row_id
+          if (existing) {
+            skillId = existing.id
           } else {
-            const existing = await c.env.DB.prepare(`
-              SELECT id FROM skills WHERE name = ?
-            `).bind(skill.name).first()
-            skillId = existing?.id
+            // Create new skill if it doesn't exist
+            const skillResult = await c.env.DB.prepare(`
+              INSERT INTO skills (name, category) VALUES (?, ?)
+            `).bind(skill.name, skill.category || 'Other').run()
+            skillId = skillResult.meta.last_row_id
           }
         }
 
