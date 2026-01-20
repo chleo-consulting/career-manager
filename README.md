@@ -352,11 +352,21 @@ Usage personnel - Charles DE COURCEL
 
 ---
 
-**Dernière mise à jour** : 2026-01-19  
-**Version** : 1.0.5  
+**Dernière mise à jour** : 2026-01-20  
+**Version** : 1.0.6  
 **Statut** : ✅ Prêt pour utilisation locale et déploiement production
 
 ## 📝 Changelog
+
+### v1.0.6 (2026-01-20)
+- 📊 **Version Control**: Ajout de la documentation et des scripts pour le contrôle de version
+  - ✨ **Git Tags** : Tags créés pour v1.0.3, v1.0.4, v1.0.5, v1.0.6
+  - 🔍 **Script `check-version.sh`** : Vérifier la version actuellement déployée
+  - 📦 **Script `generate-version.sh`** : Générer `version.json` avec métadonnées Git
+  - 📚 **Documentation complète** :
+    - `VERSION_CONTROL_GUIDE.md` : Guide complet du contrôle de version
+    - `VERSION_CONTROL_SUMMARY.md` : Résumé et recommandations
+  - 🎯 **Recommandations** : Pour afficher la version dans l'application web
 
 ### v1.0.5 (2026-01-19)
 - 🎨 **UX Improvements**: Amélioration de l'interface utilisateur
