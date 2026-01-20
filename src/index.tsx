@@ -597,11 +597,11 @@ document.getElementById('is_current').addEventListener('change',(e)=>{const ed=d
 // GET version information
 app.get('/api/version', (c) => {
   return c.json({
-    version: 'v1.0.6',
-    commit: '495b453',
+    version: 'v1.0.7',
+    commit: '996a804',
     name: 'Career Manager',
     buildDate: new Date().toISOString(),
-    description: 'Version control documentation and scripts'
+    description: 'Add /api/version endpoint and version display in footer'
   })
 })
 
