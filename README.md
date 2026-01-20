@@ -353,10 +353,22 @@ Usage personnel - Charles DE COURCEL
 ---
 
 **Dernière mise à jour** : 2026-01-20  
-**Version** : 1.0.6  
+**Version** : 1.0.7  
 **Statut** : ✅ Prêt pour utilisation locale et déploiement production
 
 ## 📝 Changelog
+
+### v1.0.7 (2026-01-20)
+- 🎨 **Version Display**: Affichage de la version dans l'application web
+  - ✨ **Endpoint `/api/version`** : Nouvelle route API retournant les informations de version
+    - Version actuelle, commit hash, nom de l'application
+    - Date de build, description de la version
+  - 🔍 **Footer** : Affichage de la version en bas de page
+    - Version avec icône Git branch
+    - Commit hash avec icône Git
+    - Lien cliquable vers GitHub
+  - 📚 **Documentation complète** : `VERSION_DISPLAY_IMPLEMENTATION.md`
+  - 🎯 **~20 lignes de code** seulement pour implémenter cette fonctionnalité
 
 ### v1.0.6 (2026-01-20)
 - 📊 **Version Control**: Ajout de la documentation et des scripts pour le contrôle de version
