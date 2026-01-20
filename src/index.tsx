@@ -529,6 +529,13 @@ app.get('/', (c) => {
 </div>
 </div>
 
+<footer class="text-center text-gray-500 text-sm py-8 mt-8">
+<div class="max-w-7xl mx-auto">
+<p>Career Manager · 2026</p>
+<p id="app-version" class="text-gray-400 text-xs mt-2">Chargement de la version...</p>
+</div>
+</footer>
+
 <div id="experienceModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
 <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
 <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
@@ -561,9 +568,10 @@ app.get('/', (c) => {
 <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
 <script>
 let experiences=[],allSkills=[];
-document.addEventListener('DOMContentLoaded',()=>{loadExperiences();loadSkills();});
+document.addEventListener('DOMContentLoaded',()=>{loadExperiences();loadSkills();loadVersion();});
 async function loadExperiences(){try{const r=await axios.get('/api/experiences');experiences=r.data.experiences;renderTimeline();updateStats();}catch(e){console.error(e);document.getElementById('timeline').innerHTML='<p class="text-red-500 text-center">Erreur de chargement</p>';}}
 async function loadSkills(){try{const r=await axios.get('/api/skills');allSkills=r.data.skills;}catch(e){console.error(e);}}
+async function loadVersion(){try{const r=await axios.get('/api/version');const v=r.data;document.getElementById('app-version').innerHTML=\`<i class="fas fa-code-branch mr-1"></i>\${v.version} <span class="mx-2">·</span> <i class="fas fa-git-alt mr-1"></i>\${v.commit} <span class="mx-2">·</span> <a href="https://github.com/chleo-consulting/career-manager" target="_blank" class="hover:text-blue-600 transition"><i class="fab fa-github mr-1"></i>GitHub</a>\`;}catch(e){console.error(e);document.getElementById('app-version').textContent='Version non disponible';}}
 function renderTimeline(){const t=document.getElementById('timeline');if(experiences.length===0){t.innerHTML='<div class="text-center text-gray-400 py-8"><i class="fas fa-briefcase text-4xl mb-4"></i><p>Aucune expérience</p><button onclick="showAddExperienceModal()" class="mt-4 text-blue-600 hover:underline">Ajouter votre première expérience</button></div>';return;}t.innerHTML=experiences.map((e,i)=>{const sd=new Date(e.start_date).toLocaleDateString('fr-FR',{month:'long',year:'numeric'});const ed=e.end_date?new Date(e.end_date).toLocaleDateString('fr-FR',{month:'long',year:'numeric'}):'Présent';const dur=calculateDuration(e.start_date,e.end_date);return \`<div class="timeline-item relative pl-8 pb-8 fade-in"><div class="bg-gradient-to-br from-white to-blue-50 rounded-lg shadow-md p-6 hover:shadow-lg transition"><div class="flex justify-between items-start mb-3"><div><h3 class="text-xl font-bold text-gray-800">\${e.position}</h3><p class="text-blue-600 font-semibold">\${e.company}</p></div><div class="flex space-x-2"><button onclick="editExperience(\${e.id})" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteExperience(\${e.id})" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button></div></div><div class="flex items-center text-sm text-gray-600 mb-3 space-x-4 flex-wrap"><span><i class="far fa-calendar-alt mr-1"></i>\${sd} - \${ed}</span><span><i class="far fa-clock mr-1"></i>\${dur}</span>\${e.location?\`<span><i class="fas fa-map-marker-alt mr-1"></i>\${e.location}</span>\`:''}\${e.is_current?'<span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold">En cours</span>':''}</div>\${e.description?\`<p class="text-gray-700 mb-3">\${escapeHtml(e.description)}</p>\`:''}\${e.achievements?\`<p class="text-gray-600 text-sm mb-3">\${escapeHtml(e.achievements)}</p>\`:''}\${e.skills&&e.skills.length>0?\`<div class="flex flex-wrap gap-2 mt-3">\${e.skills.map(s=>\`<span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">\${escapeHtml(s.name)}</span>\`).join('')}</div>\`:''}</div></div>\`;}).join('');}
 function escapeHtml(t){const m={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'};return t.replace(/[&<>"']/g,m=>m[m]);}
 function calculateDuration(sd,ed){const s=new Date(sd);const e=ed?new Date(ed):new Date();const m=(e.getFullYear()-s.getFullYear())*12+e.getMonth()-s.getMonth();const y=Math.floor(m/12);const rm=m%12;if(y>0&&rm>0)return \`\${y} an\${y>1?'s':''} \${rm} mois\`;else if(y>0)return \`\${y} an\${y>1?'s':''}\`;else return \`\${rm} mois\`;}
@@ -580,6 +588,21 @@ document.getElementById('is_current').addEventListener('change',(e)=>{const ed=d
 </body>
 </html>`
   return c.html(html)
+})
+
+// ============================================
+// VERSION API ROUTE
+// ============================================
+
+// GET version information
+app.get('/api/version', (c) => {
+  return c.json({
+    version: 'v1.0.6',
+    commit: '495b453',
+    name: 'Career Manager',
+    buildDate: new Date().toISOString(),
+    description: 'Version control documentation and scripts'
+  })
 })
 
 export default app
