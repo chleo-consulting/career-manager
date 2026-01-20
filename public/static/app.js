@@ -57,12 +57,12 @@ function renderTimeline() {
               <h3 class="text-xl font-bold text-gray-800">${exp.position}</h3>
               <p class="text-primary font-semibold">${exp.company}</p>
             </div>
-            <div class="flex space-x-2">
-              <button onclick="editExperience(${exp.id})" class="text-blue-600 hover:text-blue-800">
-                <i class="fas fa-edit"></i>
+            <div class="flex space-x-3">
+              <button onclick="editExperience(${exp.id})" class="text-blue-600 hover:text-blue-800 transition-transform hover:scale-110">
+                <i class="fas fa-edit text-xl"></i>
               </button>
-              <button onclick="deleteExperience(${exp.id})" class="text-red-600 hover:text-red-800">
-                <i class="fas fa-trash"></i>
+              <button onclick="deleteExperience(${exp.id})" class="text-red-600 hover:text-red-800 transition-transform hover:scale-110">
+                <i class="fas fa-trash text-xl"></i>
               </button>
             </div>
           </div>
@@ -186,12 +186,28 @@ function addSkillField(skill = null) {
   const container = document.getElementById('skillsContainer');
   const skillDiv = document.createElement('div');
   skillDiv.className = 'flex space-x-2 items-center skill-field';
+  
+  // Determine if skill exists (read-only) or is new (editable)
+  const isExisting = skill && skill.id;
+  const readonlyAttr = isExisting ? 'readonly' : '';
+  const bgClass = isExisting ? 'bg-gray-100' : 'bg-white';
+  const cursorClass = isExisting ? 'cursor-not-allowed' : '';
+  
   skillDiv.innerHTML = `
     <input type="hidden" name="skill_id[]" value="${skill?.id || ''}" />
-    <input type="text" name="skill_name[]" value="${skill?.name || ''}" placeholder="Nom de la compétence" class="flex-1 border border-gray-300 rounded px-3 py-2 text-sm" list="skills-datalist" />
-    <input type="text" name="skill_category[]" value="${skill?.category || ''}" placeholder="Catégorie" class="flex-1 border border-gray-300 rounded px-3 py-2 text-sm" />
-    <button type="button" onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800">
-      <i class="fas fa-times"></i>
+    <input type="text" name="skill_name[]" value="${skill?.name || ''}" 
+           placeholder="Nom de la compétence" 
+           class="flex-1 border border-gray-300 rounded px-3 py-2 text-sm ${bgClass} ${cursorClass}" 
+           list="skills-datalist" 
+           ${readonlyAttr} 
+           title="${isExisting ? 'Compétence existante (lecture seule)' : 'Nouvelle compétence'}" />
+    <input type="text" name="skill_category[]" value="${skill?.category || ''}" 
+           placeholder="Catégorie" 
+           class="flex-1 border border-gray-300 rounded px-3 py-2 text-sm ${bgClass} ${cursorClass}" 
+           ${readonlyAttr} 
+           title="${isExisting ? 'Catégorie existante (lecture seule)' : 'Catégorie de la compétence'}" />
+    <button type="button" onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800 transition-transform hover:scale-110">
+      <i class="fas fa-times text-lg"></i>
     </button>
   `;
   container.insertBefore(skillDiv, container.lastElementChild);

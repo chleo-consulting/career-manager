@@ -353,10 +353,23 @@ Usage personnel - Charles DE COURCEL
 ---
 
 **Dernière mise à jour** : 2026-01-19  
-**Version** : 1.0.4  
+**Version** : 1.0.5  
 **Statut** : ✅ Prêt pour utilisation locale et déploiement production
 
 ## 📝 Changelog
+
+### v1.0.5 (2026-01-19)
+- 🎨 **UX Improvements**: Amélioration de l'interface utilisateur
+  - ✨ **Compétences en lecture seule** : Les compétences existantes ne peuvent plus être modifiées accidentellement
+    - Compétences existantes : Fond gris, attribut `readonly`, cursor `not-allowed`
+    - Nouvelles compétences : Fond blanc, modifiables normalement
+    - Tooltip informatif pour distinguer les deux types
+  - 🔍 **Icônes plus grandes** : Amélioration de la visibilité et de l'accessibilité
+    - Taille augmentée de ~25% (`text-xl`)
+    - Animation de zoom au survol (`hover:scale-110`)
+    - Espacement amélioré entre les boutons
+    - Meilleure expérience tactile sur mobile
+- 📚 Documentation complète : `UX_IMPROVEMENTS_v1.0.5.md`
 
 ### v1.0.4 (2026-01-19)
 - 🐛 **Critical Fix**: Correction du mapping des compétences lors de la **création** d'expériences
