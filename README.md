@@ -103,6 +103,20 @@
 - created_at (DATETIME)
 ```
 
+## 📚 Documentation
+
+La documentation complète est disponible dans le répertoire **[docs/](./docs/)** :
+
+- **[Guides](./docs/guides/)** - Guides complets d'utilisation et de développement
+  - [Démarrage rapide](./docs/guides/QUICKSTART.md)
+  - [Guide de débogage](./docs/guides/DEBUGGING_GUIDE.md)
+  - [Guide de déploiement](./docs/guides/DEPLOYMENT_GUIDE.md)
+  - [Contrôle de version](./docs/guides/VERSION_CONTROL_GUIDE.md)
+
+- **[Release Notes](./docs/release-notes/)** - Historique des versions et nouvelles fonctionnalités
+
+- **[Troubleshooting](./docs/troubleshooting/)** - Résolution des problèmes et corrections de bugs
+
 ## 🚀 Guide d'Utilisation
 
 ### Ajouter une Expérience
@@ -150,9 +164,11 @@
 
 ## 🧪 Tests
 
+Pour une documentation complète des tests, consultez : **[tests/README.md](./tests/README.md)**
+
 ### Guide de Débogage
 
-**En cas d'erreur, consultez le guide complet** : [`DEBUGGING_GUIDE.md`](./DEBUGGING_GUIDE.md)
+**En cas d'erreur, consultez le guide complet** : **[docs/guides/DEBUGGING_GUIDE.md](./docs/guides/DEBUGGING_GUIDE.md)**
 
 Le guide couvre :
 - 📋 Comment lire les logs PM2
@@ -161,43 +177,22 @@ Le guide couvre :
 - 💾 Vérification de la base de données
 - 🛠️ Erreurs courantes et leurs solutions
 
-### Tests Unitaires Disponibles
+### Tests d'Intégration Disponibles
 
-#### Test 1 : Ajout de Compétence Existante
-**Objectif** : Vérifier que l'ajout d'une compétence existante (SAP) à une expérience (tefdf) réutilise correctement la compétence sans créer de doublon.
+Tous les tests sont disponibles dans le répertoire **[tests/integration/](./tests/integration/)**
 
-**Exécution** :
+#### Test Rapide : Ajout de Compétence Existante
 ```bash
 cd /home/user/webapp
-./test_add_sap_skill.sh
+./tests/integration/test_add_sap_skill.sh
 ```
 
-**Ce qui est testé** :
-- ✅ La compétence existante est réutilisée (pas de création de doublon)
-- ✅ L'ID de la compétence est préservé
-- ✅ L'association est correctement enregistrée dans la base
-- ✅ Aucune duplication n'est créée dans la table `skills`
+**Autres tests disponibles** :
+- `test_create_chatgpt.sh` - Test de création avec compétences existantes
+- `test_mixed_skills.sh` - Test de compétences mixtes (existantes + nouvelles)
+- `test_put_skills.sh` - Test de mise à jour des compétences
 
-**Résultats attendus** :
-```
-✅ La compétence SAP existante (ID: 1) a été ajoutée
-✅ Aucune duplication n'a été créée
-✅ L'ID de la compétence est correct
-✅ L'association est enregistrée dans la base
-```
-
-Voir `TEST_RESULTS.md` pour les détails complets du test.
-
-### Tests Manuels
-
-#### Test Interface Web
-1. Accédez à l'application : https://3000-ieorxtkymg9b9ldepsjp5-6532622b.e2b.dev
-2. Cliquez sur "Modifier" pour une expérience existante
-3. Ajoutez une compétence existante (ex: Python, SAP, SQL)
-4. Enregistrez
-5. Vérifiez que la compétence apparaît correctement
-6. Modifiez à nouveau l'expérience
-7. Vérifiez que la compétence conserve son ID d'origine
+Pour plus de détails, consultez **[tests/README.md](./tests/README.md)**
 
 ## 🛠️ Développement Local
 
@@ -234,51 +229,46 @@ curl http://localhost:3000/api/experiences
 pm2 logs career-manager --nostream
 ```
 
+### Scripts Utilitaires
+
+Des scripts utilitaires sont disponibles dans **[scripts/](./scripts/)** :
+
+- **`check-version.sh`** - Vérifier la version actuellement déployée
+- **`generate-version.sh`** - Générer `version.json` avec métadonnées Git
+
+```bash
+# Vérifier la version
+./scripts/check-version.sh
+
+# Générer version.json
+./scripts/generate-version.sh
+```
+
 ## ☁️ Déploiement sur Cloudflare Pages
 
-### 1. Configurer l'authentification Cloudflare
+Pour un guide complet de déploiement, consultez : **[docs/guides/DEPLOYMENT_GUIDE.md](./docs/guides/DEPLOYMENT_GUIDE.md)**
+
+### Déploiement Rapide
+
 ```bash
-# Dans votre environnement, configurez votre API token Cloudflare
-# Puis utilisez wrangler pour vous authentifier
+# 1. Authentification
 npx wrangler whoami
-```
 
-### 2. Créer la base de données D1 en production
-```bash
+# 2. Créer la base de données D1
 npx wrangler d1 create career-manager-production
-# Copiez le database_id généré dans wrangler.jsonc
-```
 
-### 3. Créer le bucket R2
-```bash
+# 3. Créer le bucket R2
 npx wrangler r2 bucket create career-manager-documents
-```
 
-### 4. Appliquer les migrations en production
-```bash
+# 4. Appliquer les migrations
 npm run db:migrate:prod
-```
 
-### 5. Créer le projet Cloudflare Pages
-```bash
-npx wrangler pages project create career-manager \
-  --production-branch main \
-  --compatibility-date 2026-01-19
-```
-
-### 6. Déployer l'application
-```bash
+# 5. Déployer
 npm run build
 npx wrangler pages deploy dist --project-name career-manager
 ```
 
-### 7. Obtenir l'URL de production
-Après le déploiement, wrangler affichera l'URL de production :
-```
-✨ Success! Uploaded 1 file
-✅ Deployment complete!
-🌎 https://career-manager.pages.dev
-```
+Pour plus de détails (configuration, troubleshooting, etc.), consultez le guide complet.
 
 ## 📊 Statut du Projet
 
@@ -367,17 +357,17 @@ Usage personnel - Charles DE COURCEL
     - Version avec icône Git branch
     - Commit hash avec icône Git
     - Lien cliquable vers GitHub
-  - 📚 **Documentation complète** : `VERSION_DISPLAY_IMPLEMENTATION.md`
+  - 📚 **Documentation complète** : [docs/release-notes/VERSION_DISPLAY_IMPLEMENTATION.md](./docs/release-notes/VERSION_DISPLAY_IMPLEMENTATION.md)
   - 🎯 **~20 lignes de code** seulement pour implémenter cette fonctionnalité
 
 ### v1.0.6 (2026-01-20)
 - 📊 **Version Control**: Ajout de la documentation et des scripts pour le contrôle de version
   - ✨ **Git Tags** : Tags créés pour v1.0.3, v1.0.4, v1.0.5, v1.0.6
-  - 🔍 **Script `check-version.sh`** : Vérifier la version actuellement déployée
-  - 📦 **Script `generate-version.sh`** : Générer `version.json` avec métadonnées Git
+  - 🔍 **Script `check-version.sh`** : Vérifier la version actuellement déployée (dans `scripts/`)
+  - 📦 **Script `generate-version.sh`** : Générer `version.json` avec métadonnées Git (dans `scripts/`)
   - 📚 **Documentation complète** :
-    - `VERSION_CONTROL_GUIDE.md` : Guide complet du contrôle de version
-    - `VERSION_CONTROL_SUMMARY.md` : Résumé et recommandations
+    - [docs/guides/VERSION_CONTROL_GUIDE.md](./docs/guides/VERSION_CONTROL_GUIDE.md) - Guide complet du contrôle de version
+    - [docs/release-notes/VERSION_CONTROL_SUMMARY.md](./docs/release-notes/VERSION_CONTROL_SUMMARY.md) - Résumé et recommandations
   - 🎯 **Recommandations** : Pour afficher la version dans l'application web
 
 ### v1.0.5 (2026-01-19)
@@ -391,7 +381,7 @@ Usage personnel - Charles DE COURCEL
     - Animation de zoom au survol (`hover:scale-110`)
     - Espacement amélioré entre les boutons
     - Meilleure expérience tactile sur mobile
-- 📚 Documentation complète : `UX_IMPROVEMENTS_v1.0.5.md`
+- 📚 Documentation complète : [docs/release-notes/UX_IMPROVEMENTS_v1.0.5.md](./docs/release-notes/UX_IMPROVEMENTS_v1.0.5.md)
 
 ### v1.0.4 (2026-01-19)
 - 🐛 **Critical Fix**: Correction du mapping des compétences lors de la **création** d'expériences
@@ -399,15 +389,15 @@ Usage personnel - Charles DE COURCEL
   - Cause : `INSERT OR IGNORE` retournait `last_row_id` incorrect
   - Solution : SELECT d'abord pour vérifier l'existence, puis INSERT seulement si nécessaire
   - Les compétences sont maintenant correctement mappées (ChatGPT ID 14, Docker ID 9, etc.)
-  - Tests automatisés ajoutés : `test_create_chatgpt.sh`, `test_mixed_skills.sh`
-- 📚 Documentation complète : `BUG_FIX_SKILL_MAPPING_v1.0.4.md`
+  - Tests automatisés ajoutés : `test_create_chatgpt.sh`, `test_mixed_skills.sh` (dans `tests/integration/`)
+- 📚 Documentation complète : [docs/troubleshooting/BUG_FIX_SKILL_MAPPING_v1.0.4.md](./docs/troubleshooting/BUG_FIX_SKILL_MAPPING_v1.0.4.md)
 
 ### v1.0.3 (2026-01-19)
 - 🐛 **Fix**: Suppression des gestionnaires d'erreur problématiques
   - Les erreurs "Context is not finalized" en développement local sont normales
   - Ces erreurs n'affectent pas le fonctionnement de l'application
   - N'apparaissent pas en production sur Cloudflare Pages
-- 📚 Documentation ajoutée : `ERROR_CONTEXT_NOT_FINALIZED.md`
+- 📚 Documentation ajoutée : [docs/troubleshooting/ERROR_CONTEXT_NOT_FINALIZED.md](./docs/troubleshooting/ERROR_CONTEXT_NOT_FINALIZED.md)
 - ℹ️ Note : Les erreurs 500 pour /favicon.ico dans les logs PM2 sont cosmétiques
 
 ### v1.0.2 (2026-01-19)
@@ -416,7 +406,7 @@ Usage personnel - Charles DE COURCEL
   - Correction : `LEFT JOIN experience_skills es ON s.id = es.skill_id`
   - Résout l'erreur "FOREIGN KEY constraint failed" lors de la modification d'expériences
   - Les compétences sont maintenant correctement listées et associées
-- 📚 Ajout du guide de débogage complet (`DEBUGGING_GUIDE.md`)
+- 📚 Ajout du guide de débogage complet : [docs/guides/DEBUGGING_GUIDE.md](./docs/guides/DEBUGGING_GUIDE.md)
 
 ### v1.0.1 (2026-01-19)
 - 🐛 **Bug Fix**: Correction du mapping des compétences lors de l'édition
